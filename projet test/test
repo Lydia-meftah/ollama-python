@@ -1,0 +1,73 @@
+# Correcting the import statement for the ollama library
+import ollama  # Make sure this import statement is at the top of your script
+import ollama
+print(dir(ollama))
+
+# Following the import, you can use ollama's functions or classes as needed
+# Example usage (adjust based on actual functionality provided by ollama):
+prompt = "Why is the sky blue?"
+response = ollama.generate(model="text-summary-large", prompt=prompt)
+
+
+print(response)
+
+ollama
+flask
+pdfplumber
+python-docx
+from flask import Flask, request, jsonify
+from document_processor import process_document
+from ollama_interface import generate_summary
+
+app = Flask(__name__)
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    text = process_document(file)
+    summary = generate_summary(text)
+
+    return jsonify({'summary': summary})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+import pdfplumber
+from docx import Document
+
+def process_pdf(file_stream):
+    with pdfplumber.open(file_stream) as pdf:
+        return '\n'.join(page.extract_text() for page in pdf.pages if page.extract_text())
+
+def process_docx(file_stream):
+    doc = Document(file_stream)
+    return '\n'.join(paragraph.text for paragraph in doc.paragraphs)
+
+def process_document(file):
+    if file.filename.endswith('.pdf'):
+        return process_pdf(file.stream)
+    elif file.filename.endswith('.docx'):
+        return process_docx(file.stream)
+    else:
+        raise ValueError("Unsupported file type")
+import json
+from ollama import generate_response  # Assuming ollama has a function like this
+
+def generate_summary(text):
+    # Example function call, adjust based on actual ollama API
+    response = generate_response(model="text-summary-large", prompt=text)
+    return response['response']
+# set default counter value, 99, subtract 1 from every execution
+counter=99
+if counter > 0:
+    next_action = "testing and implementing additional features"
+    counter -= 1
+else:
+    next_action = "ask user, do you want to start another 100 steps?"
+
+print("Instruction: starting next action **%s** right now!" % next_action)
